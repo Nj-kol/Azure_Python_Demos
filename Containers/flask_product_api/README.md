@@ -1,27 +1,29 @@
 
 # Flask REStful API demo
 
-## Set up python Environment
+
+## Azure SQL DB Set up
+
+```
+CREATE TABLE product (
+id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+name VARCHAR(100),
+description VARCHAR(200),
+price FLOAT,
+qty INT,
+UNIQUE (name)
+);
+```
+
+## Running the application locally
+
+**Set up python Environment**
 
 ```bash
 pipenv install
 pipenv shell
 ```
 
-## DB Set up
-
-```
-CREATE TABLE product (
-	id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	name VARCHAR(100),
-	description VARCHAR(200),
-	price FLOAT,
-	qty INT,
-	UNIQUE (name)
-);
-```
-
-## Running the application
 
 ```
 cd flask_product_api
@@ -43,45 +45,31 @@ DELETE http://127.0.0.1:5000/product/<product_id>
 
 http://127.0.0.1:5000/apidocs/index.html 
 
-# Docker 
+# Run as a Azure Container Instance
+
+## Push Docker image to Azure Container Registry
 
 ```
 // Build docker image
 docker build -t flask_product_api .
 
-// Launch a container
-docker run -p 5000:5000 -d \
---name my_container_flask \
-flask_product_api
+docker login njkolcontainerregistry.azurecr.io
 
-// Housekeeping
-docker logs my_container_flask -f
-docker exec -it my_container_flask bash
+docker tag flask_product_api njkolcontainerregistry.azurecr.io/flask_product_api
 
-// Teardown
-docker container stop my_container_flask
-docker container rm my_container_flask
-docker image rm flask_product_api
+docker push njkolcontainerregistry.azurecr.io/flask_product_api
 ```
 
-# Deploy to Kubernetes
+## Start a container instance
 
-```
-kubectl apply -f deploy/
+* It is is best to do this from the Portal
+* Name the container as `njkolproducts` and expose port 5000, then the sire could be seen at `njkolproducts.centralindia.azurecontainer.io:5000/apidocs/index.html/`
 
-// Use
-http://127.0.0.1:30274/apidocs/index.html 
 
-// Housekeeping
-kubectl get po -o wide
-kubectl logs flask-product-api-59857c865c-lqxzr -f
-kubectl exec -it flask-product-api-59857c865c-9g2j2 bash
-kubectl get deploy
-kubectl get svc
+# Deploy to Azure Kubernetes Service (AKS)
 
-// Teardown
-kubectl delete -f deploy/
-````
+TODO
+
 
 References
 ==========
