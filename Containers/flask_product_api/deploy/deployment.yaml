@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: flask-product-api
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -14,8 +14,9 @@ spec:
     spec:
       containers:
         - name: flask-product-api
-          image: flask_product_api
+          image: njkolcontainerregistry.azurecr.io/flask_product_api
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
 ---
+
