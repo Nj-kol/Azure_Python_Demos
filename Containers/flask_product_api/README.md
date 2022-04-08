@@ -1,4 +1,3 @@
-
 # Flask REStful API demo
 
 
@@ -68,11 +67,50 @@ docker push njkolcontainerregistry.azurecr.io/flask_product_api
 
 # Deploy to Azure Kubernetes Service (AKS)
 
-TODO
+**Point local kubectl to Azure**
+
+```bash
+az aks get-credentials \
+--resource-group njkol-analytics \
+--name njkolk8s \
+--file ${HOME}/azureconfig
+
+export KUBECONFIG=${HOME}/azureconfig
+
+# Check
+kubectl get nodes
+
+kubectl get pods --all-namespaces
+```
+
+**Deploy app on Azure Kubernetes Service(AKS)**
+
+```bash
+kubectl apply -f deploy/
 
 
-References
-==========
+# Housekeeping
+kubectl get po -o wide
+kubectl logs flask-product-api-59857c865c-lqxzr -f
+kubectl exec -it flask-product-api-59857c865c-9g2j2 bash
+kubectl get deploy
+kubectl get svc
+```
+
+**UI**
+
+http://20.204.237.204/apidocs/
+
+![flask on AKS](azurek8s.jpg)
+
+
+**Teardown**
+
+```bash
+kubectl delete -f deploy/
+```
+
+## References
 
 **Swagger**
 
